@@ -1,0 +1,2 @@
+var listOfStates = [];
+var listOfRecords = [];
