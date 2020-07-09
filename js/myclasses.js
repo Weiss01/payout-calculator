@@ -32,10 +32,8 @@ class Promoter {
     #promoterName = "";
     #childList = [];
     #sales = {};
-    constructor() {
-        if (new.target === Abstract) {
-            throw new TypeError("Cannot construct Abstract instances directly");
-        }
+    constructor(promoterName) {
+        this.#promoterName = promoterName;
     }
 
     getPromoterName() {
@@ -44,10 +42,6 @@ class Promoter {
 
     getChildList() {
         return this.#childList;
-    }
-
-    getParent() {
-        return this.#parent;
     }
 
     getSales() {
@@ -60,6 +54,7 @@ class Promoter {
 
     addChild(child) {
         this.#childList.push(child);
+        child.addParent(this); // check
     }
 
     removeChild(child) {
@@ -75,12 +70,14 @@ class Promoter {
 
 class CasualPromoter extends Promoter{
     #parent = 0;
-    constructor(promoterName, parent) {
-        this.#promoterName = promoterName;
-        this.#parent = parent;
+    constructor(promoterName) {
+        super(promoterName);
     }
     getParent() {
         return this.#parent;
+    }
+    addParent(parent) {
+        this.#parent = parent;
     }
     removeParent(parent) {
         this.#parent = 0;
@@ -89,7 +86,7 @@ class CasualPromoter extends Promoter{
 
 class Leader extends Promoter {
     constructor(promoterName) {
-        this.#promoterName = promoterName;
+        super(promoterName);
     }
 }
 
@@ -104,8 +101,8 @@ class Record {
         this.#month = month;
         this.#promoter = promoter;
         this.#numberOfSales = promoter.getSales()[month];
-        this.#salesEarnings = calculateSalesEarnings(this.#numberOfSales);
-        this.#commision = calculateCommision(month, promoter);
+        this.#salesEarnings = Record.calculateSalesEarnings(this.#numberOfSales);
+        this.#commision = Record.calculateCommision(month, promoter);
     }
 
     static calculateSalesEarnings(numberOfSales) {
@@ -116,7 +113,7 @@ class Record {
         const children = promoter.getChildList();
         var sum = 0;
         children.forEach((item, i) => {
-            sum = sum + calculateSalesEarnings(item.getSales()[month]);
+            sum = sum + Record.calculateSalesEarnings(item.getSales()[month]);
         });
         return sum * 0.05;
     }
@@ -130,7 +127,7 @@ class Table {
         this.#state = state;
         this.#month = month;
         state.getLeaderslist().forEach((item, i) => {
-            generateRecords(month, this.#recordList, item);
+            Table.generateRecords(month, this.#recordList, item);
         })
     }
 
@@ -148,13 +145,17 @@ class Table {
 
     static generateRecords(month, recordList, parent) {
         const children = parent.getChildList();
+        if (parent.constructor.name === "Leader"){
+            const temp1 = new Record(month, parent);
+            recordList.push(temp1);
+        }
         if (children.length === 0){
             return;
         } else {
             children.forEach((item, i) => {
-                const temp = new Record(month, item);
-                recordList.push(temp);
-                generateRecords(month, recordList, item);
+                const temp2 = new Record(month, item);
+                recordList.push(temp2);
+                Table.generateRecords(month, recordList, item);
             });
         }
     }
