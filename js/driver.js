@@ -14,6 +14,7 @@ var listOfPromoters = []; // for easy access to get salesNumber
 //////////////////////////////////////
 
 const sp = new State("Sungai Petani");
+listOfStates.push(sp);
 
 const l1 = new Leader("Choi Kah Yee");
 const l2 = new Leader("Tan Choon How");
@@ -85,3 +86,15 @@ cp61.setNumberOfSales("February", 1);
 cp62.setNumberOfSales("February", 0);
 
 const table1 = new Table(sp, "February");
+
+listOfPromoters.push(l1);
+listOfPromoters.push(l2);
+listOfPromoters.push(cp1);
+listOfPromoters.push(cp11);
+listOfPromoters.push(cp12);
+listOfPromoters.push(cp13);
+listOfPromoters.push(cp2);
+listOfPromoters.push(cp21);
+listOfPromoters.push(cp22);
+listOfPromoters.push(cp23);
+listOfPromoters.push(cp3);

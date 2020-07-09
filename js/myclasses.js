@@ -9,7 +9,7 @@ class State {
         return this.#stateName;
     }
 
-    getLeaderslist() {
+    getLeadersList() {
         return this.#leaderslist;
     }
 
@@ -24,6 +24,28 @@ class State {
             console.log(leader + " removed from " + this.#stateName);
         } else {
             console.log(leader + " not found in " + this.#stateName);
+        }
+    }
+    static getListofPromoters(state, leaderList) {
+        var res = [];
+        Array.from(leaderList).forEach((item, i) => {
+            State.getBranchFromParent(res, item);
+        })
+        return res;
+    }
+
+    static getBranchFromParent(promoterList, parent) {
+        const children = parent.getChildList();
+        if (parent.constructor.name === "Leader"){
+            promoterList.push(parent);
+        }
+        if (children.length === 0){
+            return;
+        } else {
+            children.forEach((item, i) => {
+                promoterList.push(item);
+                State.getListofPromoters(promoterList, item);
+            });
         }
     }
 }
@@ -126,7 +148,7 @@ class Table {
     constructor(state, month) {
         this.#state = state;
         this.#month = month;
-        state.getLeaderslist().forEach((item, i) => {
+        state.getLeadersList().forEach((item, i) => {
             Table.generateRecords(month, this.#recordList, item);
         })
     }
