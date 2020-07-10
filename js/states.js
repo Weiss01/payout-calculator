@@ -1,4 +1,3 @@
-const editStateButton = $("#editStateButton");
 var currentState = '';
 
 $(".jumbotron").on("click", '#createStateButton', function(){
@@ -8,7 +7,7 @@ $(".jumbotron").on("click", '#createStateButton', function(){
 })
 
 $(".jumbotron").on("click", '#editStateButton', function(){
-    $('#title').text('Edit Existing State');
+    $('#title').text('Select State to Edit');
     cleanup();
     listStates(listOfStates);
 })
@@ -27,8 +26,6 @@ function cleanup() {
     exists('editStateDiv') ? $('#editStateDiv').remove() : {};
     exists('listOfPromotersDiv') ? $('#listOfPromotersDiv').remove() : {};
 }
-
-function exists(id) {if (document.getElementById(id) === null) {return false;} else {return true;}}
 
 function createStateDiv(){
     $('<div/>',{class : 'container', id : 'createStateDiv'}).appendTo('.jumbotron');
@@ -79,7 +76,7 @@ function createModal() {
 function generateHandlerForPromoter(name) {
     return function (event) {
         exists('modalFooter') ? $('#modalFooter').remove() : {};
-        $('.modal-body').text("Are you sure you want to remove " + name + ' from ' + currentState + "?");
+        $('.modal-body').text("Are you sure you want to remove " + name + ' from ' + currentState.getStateName() + "?");
         $('<div/>',{class : 'modal-footer', id: 'modalFooter'}).appendTo('.modal-content');
         $('<button/>',{type: 'button', class : 'btn btn-secondary', 'data-dismiss': 'modal', id: 'cancelRemove', text: 'Cancel'}).appendTo('#modalFooter');
         $('<button/>',{type: 'button', class : 'btn btn-primary', 'data-dismiss': 'modal', id: 'confirmRemove', text: 'Remove'}).appendTo('#modalFooter');
@@ -99,6 +96,7 @@ function listPromoters(promoterList) {
 
 function generateHandlerForStates(state) {
     return function (event) {
+        $('#title').text('Edit State');
         cleanup();
         currentState = state;
         createModal();

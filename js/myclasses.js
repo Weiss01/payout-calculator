@@ -107,8 +107,15 @@ class CasualPromoter extends Promoter{
 }
 
 class Leader extends Promoter {
+    #state;
     constructor(promoterName) {
         super(promoterName);
+    }
+    setState(state) {
+        this.#state = state;
+    }
+    getState() {
+        return this.#state;
     }
 }
 
