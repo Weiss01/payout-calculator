@@ -8,9 +8,9 @@
 5. Set Number of Sales of all Promoters for <February>.
 6. Create Table.
 */
-var listOfStates = [];
-var listOfTables = [];
-var listOfPromoters = []; // for easy access to get salesNumber
+listOfStates = [];
+listOfTables = [];
+listOfPromoters = []; // for easy access to get salesNumber
 //////////////////////////////////////
 
 const sp = new State("Sungai Petani");
