@@ -1,5 +1,5 @@
 var listOfStates;
-var listOfTables;
+var listOfPayout;
 var listOfPromoters; // for easy access to get salesNumber
 
 $(".navbar").on("click", '#homeButton', function(){
@@ -20,9 +20,19 @@ $(".jumbotron").on("click", '#promoterButton', function(){
     promoterMenu();
 })
 
+$(".jumbotron").on("click", '#payoutButton', function(){
+    $('#title').html('Payout Settings');
+    cleanup();
+    payoutMenu();
+})
+
 function exists(id) {if (document.getElementById(id) === null) {return false;} else {return true;}}
 
 function cleanup() {
+    exists('listOfPayoutsDiv') ? $('#listOfPayoutsDiv').remove() : {};
+    exists('createPayoutDiv') ? $('#createPayoutDiv').remove() : {};
+    exists('enterSalesDiv') ? $('#enterSalesDiv').remove() : {};
+    exists('payoutMenuDiv') ? $('#payoutMenuDiv').remove() : {};
     exists('mainMenuDiv') ? $('#mainMenuDiv').remove() : {};
     exists('listOfStatesDiv') ? $('#listOfStatesDiv').remove() : {};
     exists('stateModal') ? $('#stateModal').remove() : {};

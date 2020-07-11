@@ -132,6 +132,27 @@ class Record {
         this.#numberOfSales = promoter.getSales()[month];
         this.#salesEarnings = Record.calculateSalesEarnings(this.#numberOfSales);
         this.#commision = Record.calculateCommision(month, promoter);
+        this.#totalEarnings = this.#salesEarnings + this.#commision;
+    }
+
+    getPromoter() {
+        return this.#promoter;
+    }
+
+    getNumberOfSales() {
+        return this.#numberOfSales;
+    }
+
+    getSalesEarnings() {
+        return this.#salesEarnings;
+    }
+
+    getCommision() {
+        return this.#commision;
+    }
+
+    getTotalEarning() {
+        return this.#totalEarnings;
     }
 
     static calculateSalesEarnings(numberOfSales) {
@@ -149,6 +170,66 @@ class Record {
 }
 
 class Table {
+    #tableData = [];
+    constructor(payout) {
+        var res = [];
+        payout.getState().getLeadersList().forEach((item, i) => {
+            res.push(Table.generateTable(res, item, 0, []));
+        });
+        var maxlength = 1;
+        res.forEach((item, i) => {
+            if (item !== undefined) {
+                if (item.length > maxlength){
+                    maxlength = item.length;
+                }
+                this.#tableData.push(item);
+            }
+        });
+        var numbers = [];
+        var reclist = payout.getRecordList();
+        this.#tableData.forEach((item, i) => {
+            for (var i = 0; i < reclist.length; i++) {
+                if (reclist[i].getPromoter().getPromoterName() === item[item.length-1]) {
+                    numbers.push([reclist[i].getNumberOfSales(), reclist[i].getSalesEarnings(), reclist[i].getCommision(), reclist[i].getTotalEarning()]);
+                    break;
+                }
+            }
+        });
+        this.#tableData.forEach((item, i) => {
+            while(item.length != maxlength) {
+                item.push('');
+            }
+        });
+        for(var i = 0; i < this.#tableData.length; i++) {
+            numbers[i].forEach((item) => {
+                this.#tableData[i].push(item);
+            });
+        }
+    }
+    static generateTable(res, parent, tier, temp) {
+        const children = parent.getChildList();
+        if (temp.length === 0) {
+            res.push([parent.getPromoterName()]);
+        } else {
+            temp.push(parent.getPromoterName());
+            res.push(temp);
+        }
+        if (children.length === 0){
+            return;
+        } else {
+            tier++;
+            children.forEach((item, i) => {
+                var temp = [];
+                for (var i = 0; i < tier; i++) {
+                    temp.push('');
+                }
+                Table.generateTable(res, item, tier, temp);
+            });
+        }
+    }
+}
+
+class Payout {
     #state;
     #month;
     #recordList = [];
@@ -156,8 +237,12 @@ class Table {
         this.#state = state;
         this.#month = month;
         state.getLeadersList().forEach((item, i) => {
-            Table.generateRecords(month, this.#recordList, item);
+            Payout.generateRecords(month, this.#recordList, item);
         })
+    }
+
+    getState() {
+        return this.#state;
     }
 
     getStateName() {
@@ -184,7 +269,7 @@ class Table {
             children.forEach((item, i) => {
                 const temp2 = new Record(month, item);
                 recordList.push(temp2);
-                Table.generateRecords(month, recordList, item);
+                Payout.generateRecords(month, recordList, item);
             });
         }
     }

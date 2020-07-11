@@ -9,7 +9,7 @@
 6. Create Table.
 */
 listOfStates = [];
-listOfTables = [];
+listOfPayouts = [];
 listOfPromoters = []; // for easy access to get salesNumber
 //////////////////////////////////////
 
@@ -85,7 +85,10 @@ cp6.setNumberOfSales("February", 8);
 cp61.setNumberOfSales("February", 1);
 cp62.setNumberOfSales("February", 0);
 
-const table1 = new Table(sp, "February");
+const payout1 = new Payout(sp, "February");
+const table1 = new Table(payout1);
+
+listOfPayouts.push(payout1);
 
 listOfPromoters.push(l1);
 listOfPromoters.push(l2);

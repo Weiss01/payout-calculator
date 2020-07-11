@@ -16,3 +16,12 @@
 .right {
     float: right;
 }
+
+.payoutSalesText {
+    width: 350px;
+}
+
+.payoutInputGroup {
+    margin: auto;
+    width: 450px;
+}
