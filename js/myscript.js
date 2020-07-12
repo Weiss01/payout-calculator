@@ -1,6 +1,12 @@
-var listOfStates;
-var listOfPayout;
-var listOfPromoters; // for easy access to get salesNumber
+// var listOfStates = [];
+// var listOfPayouts = [];
+// var listOfPromoters = []; // for easy access to get salesNumber
+var currentState = '';
+var currentLeader = '';
+var currentPromoter = '';
+var currentParent = '';
+var currentMonth = '';
+var currentPayout = '';
 
 $(".navbar").on("click", '#homeButton', function(){
     $('#title').html('Payout System');
@@ -28,7 +34,17 @@ $(".jumbotron").on("click", '#payoutButton', function(){
 
 function exists(id) {if (document.getElementById(id) === null) {return false;} else {return true;}}
 
+function isNum(val) { return /^\d+$/.test(val); }
+
 function cleanup() {
+    // currentState = '';
+    // currentLeader = '';
+    // currentPromoter = '';
+    exists('payoutModal') ? $('#payoutModal').modal('dispose') : {};
+    exists('stateModal') ? $('#stateModal').modal('dispose') : {};
+    exists('promoterModal') ? $('#promoterModal').modal('dispose') : {};
+    exists('viewButtons') ? $('#viewButtons').remove() : {};
+    exists('tableDiv') ? $('#tableDiv').remove() : {};
     exists('listOfPayoutsDiv') ? $('#listOfPayoutsDiv').remove() : {};
     exists('createPayoutDiv') ? $('#createPayoutDiv').remove() : {};
     exists('enterSalesDiv') ? $('#enterSalesDiv').remove() : {};
@@ -36,6 +52,7 @@ function cleanup() {
     exists('mainMenuDiv') ? $('#mainMenuDiv').remove() : {};
     exists('listOfStatesDiv') ? $('#listOfStatesDiv').remove() : {};
     exists('stateModal') ? $('#stateModal').remove() : {};
+    exists('payoutModal') ? $('#payoutModal').remove() : {};
     exists('stateMenuDiv') ? $('#stateMenuDiv').remove() : {};
     exists('createStateDiv') ? $('#createStateDiv').remove() : {};
     exists('editStateDiv') ? $('#editStateDiv').remove() : {};

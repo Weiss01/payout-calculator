@@ -5,6 +5,14 @@ class State {
         this.#stateName = stateName;
     }
 
+    build(jsonstate) {
+
+    }
+
+    setStateName(stateName) {
+        this.#stateName = stateName;
+    }
+
     getStateName() {
         return this.#stateName;
     }
@@ -15,12 +23,13 @@ class State {
 
     addLeader(leader) {
         this.#leaderslist.push(leader);
+        leader.setState(this);
     }
 
     removeLeader(leader) {
         const index = this.#leaderslist.indexOf(leader);
         if (index > -1) {
-            array.splice(index, 1);
+            this.#leaderslist.splice(index, 1);
             console.log(leader + " removed from " + this.#stateName);
         } else {
             console.log(leader + " not found in " + this.#stateName);
@@ -44,7 +53,7 @@ class State {
         } else {
             children.forEach((item, i) => {
                 promoterList.push(item);
-                State.getListofPromoters(promoterList, item);
+                State.getBranchFromParent(promoterList, item);
             });
         }
     }
@@ -55,6 +64,18 @@ class Promoter {
     #childList = [];
     #sales = {};
     constructor(promoterName) {
+        this.#promoterName = promoterName;
+    }
+
+    setSales(sales) {
+        this.#sales = sales;
+    }
+
+    setChildList(childList) {
+        this.#childList = childList;
+    }
+
+    setPromoterName(promoterName) {
         this.#promoterName = promoterName;
     }
 
@@ -82,7 +103,7 @@ class Promoter {
     removeChild(child) {
         const index = this.#childList.indexOf(child);
         if (index > -1) {
-            array.splice(index, 1);
+            this.#childList.splice(index, 1);
             console.log(this.#promoterName + " removed " + child);
         } else {
             console.log(child + " is not under " + this.#promoterName);
@@ -95,6 +116,13 @@ class CasualPromoter extends Promoter{
     constructor(promoterName) {
         super(promoterName);
     }
+
+    build(jsonpromoter, promoterRelation) {
+        setPromoterName(jsonpromoter.promoterName);
+        setChildList(jsonpromoter.childList);
+        setSales(jsonpromoter.sales);
+    }
+
     getParent() {
         return this.#parent;
     }
@@ -111,6 +139,14 @@ class Leader extends Promoter {
     constructor(promoterName) {
         super(promoterName);
     }
+
+    build(jsonpromoter, stateRelation) {
+        setPromoterName(jsonpromoter.promoterName);
+        setChildList(jsonpromoter.childList);
+        setSales(jsonpromoter.sales);
+        // this.#state = xqc;
+    }
+
     setState(state) {
         this.#state = state;
     }
@@ -133,6 +169,10 @@ class Record {
         this.#salesEarnings = Record.calculateSalesEarnings(this.#numberOfSales);
         this.#commision = Record.calculateCommision(month, promoter);
         this.#totalEarnings = this.#salesEarnings + this.#commision;
+    }
+
+    getMonth() {
+        return this.#month;
     }
 
     getPromoter() {
@@ -206,6 +246,11 @@ class Table {
             });
         }
     }
+
+    getTableData() {
+        return this.#tableData;
+    }
+
     static generateTable(res, parent, tier, temp) {
         const children = parent.getChildList();
         if (temp.length === 0) {
