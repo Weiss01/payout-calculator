@@ -9,10 +9,10 @@ var currentMonth = '';
 var currentPayout = '';
 var currentFile = '';
 
-// window.addEventListener('beforeunload', function (e) {
-//   e.preventDefault();
-//   e.returnValue = '';
-// });
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  e.returnValue = '';
+});
 
 $("body").on("click", '#homeButton', function(){
     $('#title').html('Payout System');
