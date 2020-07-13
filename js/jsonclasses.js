@@ -58,7 +58,6 @@ class JsonPromoterRelation {
 class JsonPayout {
     state;
     month;
-    recordList;
 
     constructor(payout) {
         this.state = new JsonState(payout.getState());

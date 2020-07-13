@@ -16,6 +16,9 @@ $(".jumbotron").on("click", '#viewPayoutButton', function(){
     $('#title').text('View Payout');
     cleanup();
     listPayouts(listOfPayouts, 'view');
+    $('<div/>', {class: 'container', id: 'viewButtons'}).appendTo('.jumbotron');
+    $('<div/>', {class : 'btn-group btn-group-lg right', role : 'group'}).appendTo('#viewButtons');
+    $('<button/>', {type : 'button', class : 'btn btn-secondary', id : 'payoutCancelButton', text : 'Cancel'}).appendTo('.btn-group');
 });
 
 $("body").on("click", '#payoutCancelButton', function(){

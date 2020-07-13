@@ -5,8 +5,21 @@ class State {
         this.#stateName = stateName;
     }
 
-    build(jsonstate) {
-
+    build(jsonstate, stateRelation, promoterRelation) {
+        this.#stateName = jsonstate.stateName;
+        var list = [];
+        jsonstate.leaderslist.forEach((item) => {
+            var temp;
+            if (item.type === "Leader") {
+                temp = new Leader();
+                temp.build(item, stateRelation, promoterRelation);
+            } else if (item.type === "CasualPromoter") {
+                temp = new CasualPromoter();
+                temp.build(item, promoterRelation);
+            }
+            list.push(temp);
+        });
+        this.#leaderslist = list;
     }
 
     setStateName(stateName) {
@@ -118,9 +131,18 @@ class CasualPromoter extends Promoter{
     }
 
     build(jsonpromoter, promoterRelation) {
-        setPromoterName(jsonpromoter.promoterName);
-        setChildList(jsonpromoter.childList);
-        setSales(jsonpromoter.sales);
+        super.setPromoterName(jsonpromoter.promoterName);
+        var lst = []
+        if (jsonpromoter.childList.length !== 0) {
+            jsonpromoter.childList.forEach((item, i) => {
+                var temp = new CasualPromoter();
+                temp.build(item, promoterRelation);
+                lst.push(temp);
+            });
+        }
+        super.setChildList(lst);
+        super.setSales(jsonpromoter.sales);
+        this.#parent = promoterRelation.relation[jsonpromoter.promoterName];
     }
 
     getParent() {
@@ -140,11 +162,19 @@ class Leader extends Promoter {
         super(promoterName);
     }
 
-    build(jsonpromoter, stateRelation) {
-        setPromoterName(jsonpromoter.promoterName);
-        setChildList(jsonpromoter.childList);
-        setSales(jsonpromoter.sales);
-        // this.#state = xqc;
+    build(jsonpromoter, stateRelation, promoterRelation) {
+        super.setPromoterName(jsonpromoter.promoterName);
+        var lst = []
+        if (jsonpromoter.childList.length !== 0) {
+            jsonpromoter.childList.forEach((item, i) => {
+                var temp = new CasualPromoter();
+                temp.build(item, promoterRelation)
+                lst.push(temp);
+            });
+        }
+        super.setChildList(lst);
+        super.setSales(jsonpromoter.sales);
+        this.#state = stateRelation.relation[jsonpromoter.promoterName];
     }
 
     setState(state) {
@@ -278,11 +308,25 @@ class Payout {
     #state;
     #month;
     #recordList = [];
-    constructor(state, month) {
+    constructor(mode, state, month) {
         this.#state = state;
         this.#month = month;
+        if (mode === 'convertion') {
+            this.#state = '';
+        } else {
+            state.getLeadersList().forEach((item, i) => {
+                Payout.generateRecords(month, this.#recordList, item);
+            })
+        }
+    }
+
+    build(jsonpayout, stateRelation, promoterRelation) {
+        var state = new State();
+        state.build(jsonpayout.state, stateRelation, promoterRelation);
+        this.#state = state;
+        this.#month = jsonpayout.month;
         state.getLeadersList().forEach((item, i) => {
-            Payout.generateRecords(month, this.#recordList, item);
+            Payout.generateRecords(jsonpayout.month, this.#recordList, item);
         })
     }
 
