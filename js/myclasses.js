@@ -1,7 +1,7 @@
 class State {
     #stateName = "";
     #leaderslist = [];
-    constructor(stateName){
+    constructor(stateName) {
         this.#stateName = stateName;
     }
 
@@ -58,10 +58,10 @@ class State {
 
     static getBranchFromParent(promoterList, parent) {
         const children = parent.getChildList();
-        if (parent.constructor.name === "Leader"){
+        if (parent.constructor.name === "Leader") {
             promoterList.push(parent);
         }
-        if (children.length === 0){
+        if (children.length === 0) {
             return;
         } else {
             children.forEach((item, i) => {
@@ -124,7 +124,7 @@ class Promoter {
     }
 }
 
-class CasualPromoter extends Promoter{
+class CasualPromoter extends Promoter {
     #parent = 0;
     constructor(promoterName) {
         super(promoterName);
@@ -229,7 +229,7 @@ class Record {
         return numberOfSales * 4;
     }
 
-    static calculateCommision(month, promoter){
+    static calculateCommision(month, promoter) {
         const children = promoter.getChildList();
         var sum = 0;
         children.forEach((item, i) => {
@@ -249,7 +249,7 @@ class Table {
         var maxlength = 1;
         res.forEach((item, i) => {
             if (item !== undefined) {
-                if (item.length > maxlength){
+                if (item.length > maxlength) {
                     maxlength = item.length;
                 }
                 this.#tableData.push(item);
@@ -259,22 +259,34 @@ class Table {
         var reclist = payout.getRecordList();
         this.#tableData.forEach((item, i) => {
             for (var i = 0; i < reclist.length; i++) {
-                if (reclist[i].getPromoter().getPromoterName() === item[item.length-1]) {
+                if (reclist[i].getPromoter().getPromoterName() === item[item.length - 1]) {
                     numbers.push([reclist[i].getNumberOfSales(), reclist[i].getSalesEarnings(), reclist[i].getCommision(), reclist[i].getTotalEarning()]);
                     break;
                 }
             }
         });
         this.#tableData.forEach((item, i) => {
-            while(item.length != maxlength) {
+            while (item.length != maxlength) {
                 item.push('');
             }
         });
-        for(var i = 0; i < this.#tableData.length; i++) {
+        for (var i = 0; i < this.#tableData.length; i++) {
             numbers[i].forEach((item) => {
                 this.#tableData[i].push(item);
             });
         }
+        var stats = [0, 0, 0, 0];
+        reclist.forEach((item) => {
+            stats[0] += item.getNumberOfSales();
+            stats[1] += item.getSalesEarnings();
+            stats[2] += item.getCommision();
+            stats[3] += item.getTotalEarning();
+        });
+        var temp = []
+        for (var i = 0; i < this.#tableData[0].length - 4; i++) {
+            temp.push('');
+        }
+        this.#tableData.push(temp.concat(stats));
     }
 
     getTableData() {
@@ -289,7 +301,7 @@ class Table {
             temp.push(parent.getPromoterName());
             res.push(temp);
         }
-        if (children.length === 0){
+        if (children.length === 0) {
             return;
         } else {
             tier++;
@@ -348,11 +360,11 @@ class Payout {
 
     static generateRecords(month, recordList, parent) {
         const children = parent.getChildList();
-        if (parent.constructor.name === "Leader"){
+        if (parent.constructor.name === "Leader") {
             const temp1 = new Record(month, parent);
             recordList.push(temp1);
         }
-        if (children.length === 0){
+        if (children.length === 0) {
             return;
         } else {
             children.forEach((item, i) => {

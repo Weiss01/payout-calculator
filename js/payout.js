@@ -82,7 +82,7 @@ $(".jumbotron").on("click", '#confirmSalesButton', function(){
         item.setNumberOfSales(currentMonth, temp)
     });
     if (flag) {
-        var payout = new Payout(currentState, currentMonth);
+        var payout = new Payout('creation', currentState, currentMonth);
         listOfPayouts.push(payout);
         $('#modalTitle').text('Successful Creation');
         exists('modalFooter') ? $('#modalFooter').remove() : {};
@@ -91,6 +91,15 @@ $(".jumbotron").on("click", '#confirmSalesButton', function(){
         $('<button/>',{type: 'button', class : 'btn btn-secondary', 'data-dismiss': 'modal', id: 'payoutCancelButton', text: 'Okay'}).appendTo('#modalFooter');
         $('#payoutModal').modal('show');
     }
+});
+
+$(".jumbotron").on("click", '#viewLeadersButton', function(){
+    $('#title').text('View Leaders');
+    cleanup();
+    listPayouts([], 'leaders');
+    $('<div/>', {class: 'container', id: 'viewButtons'}).appendTo('.jumbotron');
+    $('<div/>', {class : 'btn-group btn-group-lg right', role : 'group'}).appendTo('#viewButtons');
+    $('<button/>', {type : 'button', class : 'btn btn-secondary', id : 'payoutCancelButton', text : 'Cancel'}).appendTo('.btn-group');
 });
 
 function payoutMenu() {
@@ -102,6 +111,8 @@ function payoutMenu() {
     $('<strong/>',{text : 'Delete Payout'}).appendTo('#deletePayoutButton');
     $('<button/>',{type : 'button', class : 'list-group-item list-group-item-action', id : 'viewPayoutButton'}).appendTo('.list-group');
     $('<strong/>',{text : 'View Payout'}).appendTo('#viewPayoutButton');
+    $('<button/>',{type : 'button', class : 'list-group-item list-group-item-action', id : 'viewLeadersButton'}).appendTo('.list-group');
+    $('<strong/>',{text : 'View Leaders'}).appendTo('#viewLeadersButton');
 }
 
 function createPayoutModal() {
@@ -147,6 +158,13 @@ function deletePayoutDiv() {
     $('<button/>',{type : 'button', class : 'btn btn-secondary', id : 'payoutCancelButton', text : 'Cancel'}).appendTo('.btn-group');
 }
 
+function leaderDiv(table) {
+    generateTableHtml(table);
+    $('<div/>', {class: 'container', id: 'viewButtons'}).appendTo('.jumbotron');
+    $('<div/>', {class : 'btn-group btn-group-lg right', role : 'group'}).appendTo('#viewButtons');
+    $('<button/>', {type : 'button', class : 'btn btn-secondary', id : 'payoutCancelButton', text : 'Cancel'}).appendTo('.btn-group');
+}
+
 function generateTableHtml(table) {
     $('<table/>', {class: 'table table-bordered table-dark', id: 'tableDiv'}).appendTo('.jumbotron');
     $('<thead/>', {class: 'thead-dark'}).appendTo('#tableDiv');
@@ -161,6 +179,32 @@ function generateTableHtml(table) {
         $('<tr/>', {id: 'bodyRow'+i}).appendTo('#tableDivBody');
         row.forEach((item, j) => {
             if (j >= row.length - 3){
+                if (Number(item) === 0) {
+                    $('<td/>', {text: '---'}).appendTo('#bodyRow'+i);
+                } else {
+                    $('<td/>', {text: 'RM'+Number(item).toFixed(2)}).appendTo('#bodyRow'+i);
+                }
+            } else {
+                $('<td/>', {text: item}).appendTo('#bodyRow'+i);
+            }
+        });
+    });
+}
+
+function generateLeaderHtml(table) {
+    $('<table/>', {class: 'table table-bordered table-dark', id: 'tableDiv'}).appendTo('.jumbotron');
+    $('<thead/>', {class: 'thead-dark'}).appendTo('#tableDiv');
+    $('<tr/>', {id: 'tableDivHeader'}).appendTo('thead');
+    $('<tbody/>', {id: 'tableDivBody'}).appendTo('#tableDiv');
+    for (var i = 0; i < table[0].length - 4; i++) { $('<th/>', {scope: 'col'}).appendTo('#tableDivHeader'); }
+    $('<th/>', {scope: 'col', text: 'Leader Name'}).appendTo('#tableDivHeader');
+    $('<th/>', {scope: 'col', text: 'Sales'}).appendTo('#tableDivHeader');
+    $('<th/>', {scope: 'col', text: 'Sales x4'}).appendTo('#tableDivHeader');
+    $('<th/>', {scope: 'col', text: 'Commision'}).appendTo('#tableDivHeader');
+    table.forEach((row, i) => {
+        $('<tr/>', {id: 'bodyRow'+i}).appendTo('#tableDivBody');
+        row.forEach((item, j) => {
+            if (j >= row.length - 2){
                 if (Number(item) === 0) {
                     $('<td/>', {text: '---'}).appendTo('#bodyRow'+i);
                 } else {
@@ -198,6 +242,28 @@ function payoutGenerateViewHandlerForPayout(payout) {
     }
 }
 
+function payoutGenerateLeaderHandlerForPayout(month) {
+    var table = [];
+    var stats = ['', 0, 0, 0];
+    listOfPromoters.forEach((item) => {
+        var temp = []
+        if (item.constructor.name === 'Leader') {
+            var temp2 = new Record(month, item);
+            temp.push(temp2.getPromoter().getPromoterName());
+            temp.push(temp2.getNumberOfSales());
+            stats[1] += temp2.getNumberOfSales();
+            temp.push(temp2.getSalesEarnings());
+            stats[2] += temp2.getSalesEarnings();
+            temp.push(temp2.getCommision());
+            stats[3] += temp2.getCommision();
+            table.push(temp);
+        }
+    });
+    table.push(stats);
+    cleanup();
+    generateLeaderHtml(table);
+}
+
 function listPayouts(payoutList, mode) {
     $('<div/>',{class : 'container text-center', id : 'listOfPayoutsDiv'}).appendTo('.jumbotron');
     $('<br/>',{}).appendTo('#listOfPayoutsDiv');
@@ -212,6 +278,15 @@ function listPayouts(payoutList, mode) {
             $('<button/>',{type : 'button', class : 'list-group-item list-group-item-action', id: 'payout' + i, text: item.getMonth() + ' - ' + item.getState().getStateName()}).appendTo('.list-group');
             $('#payout' + i).click(payoutGenerateViewHandlerForPayout(item));
         });
+    } else if (mode === 'leaders') {
+        var monthList = []
+        listOfPayouts.forEach((item) => {
+            monthList.push(item.getMonth());
+        });
+        monthList.forEach((item, i) => {
+            $('<button/>',{type : 'button', class : 'list-group-item list-group-item-action', id: 'payout' + i, text: item}).appendTo('.list-group');
+            $('#payout' + i).click(payoutGenerateLeaderHandlerForPayout(item));
+        })
     }
 }
 
@@ -222,7 +297,7 @@ function payoutListPromoters(promoterList) {
         $('<div/>',{class : 'input-group-prepend', id: 'promoterPrepend' + i}).appendTo('#promoter' + i);
         $('<span/>',{text: item.getPromoterName(), class : 'input-group-text payoutSalesText', id: 'inputGroup-sizing-lg'}).appendTo('#promoterPrepend' + i);
         $('<input/>', {type: 'text', class: 'form-control', id: item.getPromoterName().split(' ').join('') + 'Sales', 'aria-label': 'Sizing example input', 'aria-describedby': 'inputGroup-sizing-lg'}).appendTo('#promoter' + i)
-    });
+    })
 }
 
 function payoutGenerateHandlerForState(state) {

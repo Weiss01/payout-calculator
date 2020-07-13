@@ -1,6 +1,6 @@
 var listOfStates = [];
 var listOfPayouts = [];
-var listOfPromoters = []; // for easy access to get salesNumber
+var listOfPromoters = [];
 var currentState = '';
 var currentLeader = '';
 var currentPromoter = '';
@@ -8,7 +8,11 @@ var currentParent = '';
 var currentMonth = '';
 var currentPayout = '';
 var currentFile = '';
-var obj;
+
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   e.returnValue = '';
+// });
 
 $("body").on("click", '#homeButton', function(){
     $('#title').html('Payout System');
@@ -105,7 +109,7 @@ function readFileAsString(file) {
     var reader = new FileReader();
     reader.onload = function(event) {
         console.log("Finished Reading");
-        obj = JSON.parse(event.target.result);
+        var obj = JSON.parse(event.target.result);
         console.log(obj);
         obj['states'].forEach((item) => {
             var temp = new State();
