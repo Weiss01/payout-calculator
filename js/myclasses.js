@@ -105,7 +105,7 @@ class Promoter {
     }
 
     setNumberOfSales(month, numberOfSales) {
-        this.#sales[month] = numberOfSales;
+        this.#sales[month] = Number(numberOfSales);
     }
 
     addChild(child) {
@@ -277,7 +277,7 @@ class Table {
         }
         var stats = [0, 0, 0, 0];
         reclist.forEach((item) => {
-            stats[0] += item.getNumberOfSales();
+            stats[0] += Number(item.getNumberOfSales());
             stats[1] += item.getSalesEarnings();
             stats[2] += item.getCommision();
             stats[3] += item.getTotalEarning();

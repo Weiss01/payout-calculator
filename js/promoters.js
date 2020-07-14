@@ -282,7 +282,7 @@ function promoterGenerateParentHandlerForPromoter(item) {
         currentParent = item;
         $('#modalTitle').text('Assign Parent');
         exists('modalFooter') ? $('#modalFooter').remove() : {};
-        $('.modal-body').text("Are you sure you want to assign " + item.getPromoterName() + ' as ' + currentPromoter.getPromoterName() + '\' parent ?');
+        $('.modal-body').text("Are you sure you want to assign " + item.getPromoterName() + ' as ' + currentPromoter.getPromoterName() + '\'s parent ?');
         $('<div/>',{class : 'modal-footer', id: 'modalFooter'}).appendTo('.modal-content');
         $('<button/>',{type: 'button', class : 'btn btn-secondary', 'data-dismiss': 'modal', id: 'cancelAssignParent', text: 'Cancel'}).appendTo('#modalFooter');
         $('<button/>',{type: 'button', class : 'btn btn-primary', 'data-dismiss': 'modal', id: 'confirmAssignParent', text: 'Yes'}).appendTo('#modalFooter');
