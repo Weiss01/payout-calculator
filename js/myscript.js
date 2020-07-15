@@ -39,7 +39,7 @@ $(".jumbotron").on("click", '#payoutButton', function(){
     payoutMenu();
 })
 
-$(".jumbotron").on("click", '#exportButton', function(){
+$(".jumbotron").on("click", '#exportFileButton', function(){
     var stateRelation = new JsonStateRelation();
     var promoterRelation = new JsonPromoterRelation();
     var listOfJsonStates = [];
@@ -65,7 +65,13 @@ $(".jumbotron").on("click", '#exportButton', function(){
     my_obj['payouts'] = listOfJsonPayouts;
     my_obj['stateRelation'] = stateRelation;
     my_obj['promoterRelation'] = promoterRelation;
-    downloadObjectAsJson(my_obj, 'my_obj');
+    downloadObjectAsJson(my_obj, removeNonAlphabets($('#fileName').val()));
+})
+
+$(".jumbotron").on("click", '#exportButton', function(){
+    $('#title').html('Name file to export');
+    cleanup();
+    exportDiv();
 })
 
 $(".jumbotron").on("click", '#importButton', function(){
@@ -175,6 +181,7 @@ function cleanup() {
     exists('stateModal') ? $('#stateModal').modal('dispose') : {};
     exists('promoterModal') ? $('#promoterModal').modal('dispose') : {};
     exists('viewButtons') ? $('#viewButtons').remove() : {};
+    exists('exportDiv') ? $('#exportDiv').remove() : {};
     exists('importDiv') ? $('#importDiv').remove() : {};
     exists('tableDiv') ? $('#tableDiv').remove() : {};
     exists('alert-bar') ? $('#alert-bar').remove() : {};
@@ -225,6 +232,18 @@ function mainMenu() {
     $('<strong/>',{text : 'Export'}).appendTo('#exportButton');
     $('<button/>',{type : 'button', class : 'list-group-item list-group-item-action', id : 'importButton'}).appendTo('.list-group');
     $('<strong/>',{text : 'Import'}).appendTo('#importButton');
+}
+
+function exportDiv() {
+    $('<div/>',{class : 'container', id : 'exportDiv'}).appendTo('.jumbotron');
+    $('<div/>',{class : 'input-group input-group-lg'}).appendTo('#exportDiv');
+    $('<div/>',{class : 'input-group-prepend'}).appendTo('.input-group');
+    $('<span/>',{class : 'input-group-text', id : 'inputGroup-sizing-lg', text : 'File Name:'}).appendTo('.input-group-prepend');
+    $('<input/>',{type : 'text', class : 'form-control', id : 'fileName'}).appendTo('.input-group');
+    $('<br/>',{}).appendTo('#exportDiv');
+    $('<div/>',{class : 'btn-group btn-group-lg right', role : 'group'}).appendTo('#exportDiv');
+    $('<button/>',{type : 'button', class : 'btn btn-secondary', id : 'homeButton', text : 'Cancel'}).appendTo('.btn-group');
+    $('<button/>',{type : 'button', class : 'btn btn-secondary', id : 'exportFileButton', text: 'Confirm'}).appendTo('.btn-group');
 }
 
 function importDiv() {
