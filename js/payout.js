@@ -59,7 +59,7 @@ $(".jumbotron").on("click", '#confirmSalesButton', function(){
         State.getBranchFromParent(list, item);
     });
     list.forEach((item, i) => {
-        var temp = $('#' + item.getPromoterName().split(' ').join('') + 'Sales').val();
+        var temp = $('#' + removeNonAlphabets(item.getPromoterName()).split(' ').join('') + 'Sales').val();
         if (temp === '') {
             $('#modalTitle').text('Empty Number of Sales');
             exists('modalFooter') ? $('#modalFooter').remove() : {};
@@ -296,7 +296,7 @@ function payoutListPromoters(promoterList) {
         $('<div/>',{class : 'input-group input-group-lg payoutInputGroup', id: 'promoter' + i}).appendTo('#enterSalesDiv');
         $('<div/>',{class : 'input-group-prepend', id: 'promoterPrepend' + i}).appendTo('#promoter' + i);
         $('<span/>',{text: item.getPromoterName(), class : 'input-group-text payoutSalesText', id: 'inputGroup-sizing-lg'}).appendTo('#promoterPrepend' + i);
-        $('<input/>', {type: 'text', class: 'form-control', id: item.getPromoterName().split(' ').join('') + 'Sales', 'aria-label': 'Sizing example input', 'aria-describedby': 'inputGroup-sizing-lg'}).appendTo('#promoter' + i)
+        $('<input/>', {type: 'text', class: 'form-control', id: removeNonAlphabets(item.getPromoterName()).split(' ').join('') + 'Sales', 'aria-label': 'Sizing example input', 'aria-describedby': 'inputGroup-sizing-lg'}).appendTo('#promoter' + i)
     })
 }
 

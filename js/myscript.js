@@ -8,6 +8,7 @@ var currentParent = '';
 var currentMonth = '';
 var currentPayout = '';
 var currentFile = '';
+var alphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".split('');
 
 window.addEventListener('beforeunload', function (e) {
   e.preventDefault();
@@ -150,6 +151,23 @@ function downloadObjectAsJson(exportObj, exportName) {
 function exists(id) {if (document.getElementById(id) === null) {return false;} else {return true;}}
 
 function isNum(val) { return /^\d+$/.test(val); }
+
+function removeNonAlphabets(str) {
+    var temp = str.split('');
+    var removeList = []
+    temp.forEach((item, i) => {
+        if (!alphabets.includes(item)) {
+            removeList.push(i)
+        }
+    });
+    for (var i = 0; i < removeList.length; i++) {
+        removeList[i] = removeList[i] - i;
+    }
+    removeList.forEach((item) => {
+        temp.splice(item, 1);
+    });
+    return temp.join('');
+}
 
 function cleanup() {
     exists('payoutModal') ? $('#payoutModal').modal('dispose') : {};
