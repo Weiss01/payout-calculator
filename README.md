@@ -14,6 +14,9 @@ Fully functional static website to create payouts in tables. Attempted to create
 
 # Concept
 The concept of this entire website is based on object-oriented programming. 
-2 sets of classes were created in javascript. One set that keeps track of the relationship between objects and for the actual calculations of the payout and another set specifically for the conversion into a JSON file. This is because the first set of objects has infinite links (e.g Leader A has Promoter B as child, Promoter B has Leader A as parent, Leader A has Promoter B as child...) that cannot be stringified into a JSON string and the second set of classes is a workaround to that essentially storing the parent/child relationships in a single seperate object.
+
+2 sets of classes were created in javascript. One set that keeps track of the relationship between objects and for the actual calculations of the payout and another set specifically for the conversion into a JSON file. This is because the first set of objects has infinite links (e.g Leader A has Promoter B as child, Promoter B has Leader A as parent, Leader A has Promoter B as child...) that cannot be stringified into a JSON string and the second set of classes is a workaround to that, essentially storing the parent/child relationships in a single seperate object.
+
 Recursion algorithms were used to get the entire tree of leader/promoters for various calculations.
+
 Another algorithm was designed to create a 2D array of the payout table which can be directly processed by the generateTableHTML function in payout.js to directly generate a table in HTML.
