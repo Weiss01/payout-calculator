@@ -1,6 +1,8 @@
 # payout-calculator
 Fully functional static website to create payouts in tables. Attempted to create a relational database system without a server. This website is hosted on github pages. To make this website functional on github pages which supports only static websites, the data in each session is able to be exported as an encoded JSON file. The file can then be imported in a future session to reinitialise all the variables and their values from the previous session.
 
+hosted at: https://weiss01.github.io/payout-calculator/
+
 # How to use
 - Create a state
 - Create a leader for said state
