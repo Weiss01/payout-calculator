@@ -20,3 +20,5 @@ The concept of this entire website is based on object-oriented programming.
 Recursion algorithms were used to get the entire tree of leader/promoters for various calculations.
 
 Another algorithm was designed to create a 2D array of the payout table which can be directly processed by the generateTableHTML function in payout.js to directly generate a table in HTML.
+
+Note: One of my first ever freelance projects :D
